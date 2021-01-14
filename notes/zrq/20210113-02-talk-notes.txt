@@ -1,0 +1,111 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+
+    Notes for a talk on the Aglais project development.
+
+
+    Storage
+
+        NFS
+        - NFS on Cinder volumes
+        - default deployment has performance issues
+        - NFS single server node for the whole cluster
+        - NFS security - root in containers
+        - plan to benchmark compare with direct CephFS
+
+        HadoopFS
+        - HDFS on Cinder volumes
+        - default deployment has performance issues
+        - plan to benchmark compare with direct CephFS
+
+        Openstack Swift
+        - Limited support by Openstack
+        - No working client libraries
+
+        S3
+        - Openstack S3 (issues)
+        - IRIS/STFC S3 storage
+        - Commercial cloud storage
+        - Bug in the driver - blocking use of S3 for large daya !?
+
+        CephFS
+        - Openstack Manila
+        - Kubernetes CSI
+        - Bug in the driver - avoided for now, more later
+        - Manila shares for all our catalogs
+        - Manila shares for all our user data
+        - matches the infrastructure at Cambridge
+
+    Deplyment
+
+        Ansible
+        - replicated original Hadoop/Yarn deployment
+        - working deployment now
+        - test bed for Zeppelin devlopment
+        - test bed for AXS devlopment
+
+        Terraform
+        - still need to use Openstack commands to set up params
+        - things we need to create are not generic (e.g. router for CephFS)
+        - state depends on local files, hard to share
+        - clear text secrets
+        - no clear advantage
+
+        Helm
+        - rw charts directory in the repo tree
+          https://github.com/wfau/aglais/issues/309
+        - intermittent issues with (Openstack) networking
+        - single tree structure deploys the whole system
+
+        Hadoop/Yarn
+        - Traditional structure
+        - Static Spark cluster instance
+        - Shared resources
+        - Need to propagate Unix uid
+
+        Kubernetes
+        - Disruptive design
+        - Dynaminc on demand Spark cluster
+        - Isolated resources
+        - Need to propagate user identity
+
+        Resource booking
+        - Zeppelin interpreter
+        - Spark cluster
+        - Drupal bookings
+        - Openstack Blazar
+          https://docs.openstack.org/blazar/latest/
+        - StackHPC plans
+
+
+
+
+
+
+

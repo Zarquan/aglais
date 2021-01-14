@@ -1,0 +1,442 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Build Spark image from source.
+
+    Result:
+
+        Work in progress ....
+
+
+# -----------------------------------------------------
+# Check the local working branch.
+#[user@desktop]
+
+    source "${HOME}/aglais.env"
+    pushd  "${AGLAIS_CODE:?}"
+
+        git status
+
+--START--
+On branch 20210113-zrq-working
+Your branch is up to date with 'origin/20210113-zrq-working'.
+....
+....
+--END--
+
+        git remote -v
+
+    popd
+
+
+
+
+# -----------------------------------------------------
+# Update our Spark fork.
+#[user@desktop]
+
+    source "${HOME}/aglais.env"
+    pushd  "${SPARK_CODE:?}"
+
+        git checkout master
+
+--START--
+....
+....
+--END--
+
+
+        git remote -v
+
+--START--
+....
+....
+--END--
+
+
+        git fetch upstream
+
+--START--
+....
+....
+--END--
+
+
+        git merge upstream/master
+
+--START--
+....
+....
+--END--
+
+
+        git push
+
+--START--
+....
+....
+--END--
+
+    popd
+
+
+# -----------------------------------------------------
+# Branch our Spark fork.
+#[user@desktop]
+
+    newbranch=$(date '+%Y%m%d')-zrq-working
+
+    source "${HOME}/aglais.env"
+    pushd  "${AGLAIS_CODE}"
+
+        git checkout master
+
+--START--
+....
+....
+--END--
+
+
+        git checkout -b "${newbranch:?}"
+
+--START--
+....
+....
+--END--
+
+
+        git push --set-upstream origin "${newbranch:?}"
+
+--START--
+....
+....
+--END--
+
+    popd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# -----------------------------------------------------
+# Create a vitual machine to work with.
+#[user@desktop]
+
+    ssh trop04
+
+        createvm
+
+--START--
+INFO : Node name [Wumar]
+INFO : Base name [fedora-31-docker-base-20200722.qcow]
+INFO : Base path [/var/lib/libvirt/images/base/fedora-31-docker-base-20200722.qcow]
+INFO : Disc name [Wumar.qcow]
+INFO : Disc size [32GiB]
+--END--
+
+
+# -----------------------------------------------------
+# Login to the virtual machine.
+#[user@desktop]
+
+    ssh Wumar
+
+
+# -----------------------------------------------------
+# Create our build directories.
+[user@virtual]
+
+    mkdir "${HOME}/build"
+    mkdir "${HOME}/cache"
+
+
+# -----------------------------------------------------
+# Configure our source code paths.
+#[user@virtual]
+
+    cat > "${HOME}/aglais.env" << 'EOF'
+AGLAIS_REPO='https://github.com/Zarquan/aglais.git'
+AGLAIS_HOME="${HOME}/build/aglais"
+AGLAIS_CODE="${AGLAIS_HOME:?}/github-zrq"
+AGLAIS_CLOUD=gaia-prod
+
+SPARK_REPO='https://github.com/Zarquan/aglais-spark.git'
+SPARK_HOME="${HOME}/build/aglais-spark"
+SPARK_CODE="${SPARK_HOME:?}/github-zrq"
+
+ZEPPELIN_REPO='https://github.com/Zarquan/aglais-zeppelin.git'
+ZEPPELIN_HOME="${HOME}/build/aglais-zeppelin"
+ZEPPELIN_CODE="${ZEPPELIN_HOME:?}/github-zrq"
+
+EOF
+
+
+# -----------------------------------------------------
+# Clone our source code.
+#[user@virtual]
+
+    gitclone()
+        {
+        local codepath=${1:?}
+        local coderepo=${2:?}
+
+        local coderoot=$(dirname  ${codepath})
+        local codename=$(basename ${codepath})
+
+        echo "Checking [${codepath:?}]"
+        if [ -e "${codepath:?}" ]
+        then
+            echo "Updating [${codepath:?}]"
+            pushd "${codepath:?}"
+                git pull
+            popd
+        else
+            echo "Checking [${coderoot:?}]"
+            if [ ! -e "${coderoot:?}" ]
+            then
+                echo "Creating [${coderoot:?}]"
+                mkdir -p "${coderoot:?}"
+            fi
+
+            echo "Checkout [${coderoot:?}][${codename:?}]"
+            pushd "${coderoot:?}"
+                git clone "${coderepo:?}" "${codename:?}"
+            popd
+        fi
+        }
+
+    source "${HOME}/aglais.env"
+    gitclone "${AGLAIS_CODE:?}" "${AGLAIS_REPO:?}"
+
+--START--
+Cloning into 'github-zrq'...
+remote: Enumerating objects: 897, done.
+remote: Counting objects: 100% (897/897), done.
+remote: Compressing objects: 100% (557/557), done.
+remote: Total 5803 (delta 404), reused 635 (delta 305), pack-reused 4906
+Receiving objects: 100% (5803/5803), 2.53 MiB | 2.82 MiB/s, done.
+Resolving deltas: 100% (3033/3033), done.
+--END--
+
+
+    source "${HOME}/aglais.env"
+    gitclone "${SPARK_CODE:?}" "${SPARK_REPO:?}"
+
+--START--
+Cloning into 'github-zrq'...
+remote: Enumerating objects: 48, done.
+remote: Counting objects: 100% (48/48), done.
+remote: Compressing objects: 100% (34/34), done.
+remote: Total 768836 (delta 25), reused 14 (delta 14), pack-reused 768788
+Receiving objects: 100% (768836/768836), 342.39 MiB | 7.54 MiB/s, done.
+Resolving deltas: 100% (322059/322059), done.
+Updating files: 100% (17158/17158), done.
+--END--
+
+
+    source "${HOME}/aglais.env"
+    gitclone "${ZEPPELIN_CODE:?}" "${ZEPPELIN_REPO:?}"
+
+--START--
+Cloning into 'github-zrq'...
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 98409 (delta 0), reused 0 (delta 0), pack-reused 98406
+Receiving objects: 100% (98409/98409), 86.34 MiB | 8.53 MiB/s, done.
+Resolving deltas: 100% (40362/40362), done.
+--END--
+
+
+# -----------------------------------------------------
+# Swap to our development branch.
+#[user@virtual]
+
+    source "${HOME}/aglais.env"
+    pushd  "${AGLAIS_CODE:?}"
+
+        git checkout 20210113-zrq-working
+
+    popd
+
+--START--
+Branch '20210113-zrq-working' set up to track remote branch '20210113-zrq-working' from 'origin'.
+Switched to a new branch '20210113-zrq-working'
+--END--
+
+
+    source "${HOME}/aglais.env"
+    pushd  "${SPARK_CODE:?}"
+
+        git checkout ....
+
+    popd
+
+--START--
+....
+....
+--END--
+
+
+    source "${HOME}/aglais.env"
+    pushd  "${ZEPPELIN_CODE:?}"
+
+        git checkout ....
+
+    popd
+
+--START--
+....
+....
+--END--
+
+
+# -----------------------------------------------------
+# Run a Java build container, using the same UID inside.
+# https://www.redhat.com/sysadmin/user-flag-rootless-containers
+[user@virtual]
+
+    podman run \
+        --rm \
+        --tty \
+        --interactive \
+        --hostname builder \
+        --userns keep-id \
+        --env "SSH_AUTH_SOCK=/tmp/ssh_auth_sock" \
+        --volume "${SSH_AUTH_SOCK}:/tmp/ssh_auth_sock:z" \
+        --volume "${HOME}/cache:/var/local/cache:rw" \
+        --volume "${HOME}/build:/var/local/build:rw" \
+        "aglais/builder:latest" \
+        bash
+
+    >   ....
+    >   ....
+
+
+
+# -----------------------------------------------------
+# Configure our home directory.
+# (*) defaults to /root
+#[user@builder]
+
+    HOME=/tmp/home
+
+    mkdir "${HOME}"
+
+
+# -----------------------------------------------------
+# Configure our source code paths.
+#[user@builder]
+
+    cat > "${HOME}/aglais.env" << 'EOF'
+AGLAIS_REPO='https://github.com/Zarquan/aglais.git'
+AGLAIS_HOME='/var/local/build/aglais'
+AGLAIS_CODE="${AGLAIS_HOME:?}/github-zrq"
+AGLAIS_CLOUD=gaia-prod
+
+SPARK_REPO='https://github.com/Zarquan/aglais-spark.git'
+SPARK_HOME='/var/local/build/aglais-spark'
+SPARK_CODE="${SPARK_HOME:?}/github-zrq"
+
+ZEPPELIN_REPO='https://github.com/Zarquan/aglais-zeppelin.git'
+ZEPPELIN_HOME='/var/local/build/aglais-zeppelin'
+ZEPPELIN_CODE="${ZEPPELIN_HOME:?}/github-zrq"
+EOF
+
+
+# -----------------------------------------------------
+# Build our version of Spark.
+# https://github.com/Zarquan/aglais-spark/blob/master/README.md#building-spark
+#[user@builder]
+
+    # Build all the components and install them in the Maven cache.
+    source "${HOME}/aglais.env"
+    pushd  "${SPARK_CODE:?}"
+
+        # Spark is built using [Apache Maven](https://maven.apache.org/).
+        # To build Spark and its example programs, run:
+
+        mvn -D skipTests clean package
+
+    popd
+
+
+# -----------------------------------------------------
+# Build our version of Zeppelin.
+#[user@builder]
+
+    # Build all the components and install them in the Maven cache.
+    source "${HOME}/aglais.env"
+    pushd  "${ZEPPELIN_CODE:?}"
+
+        mvn clean install -D skipTests -P build-distr -P hadoop3
+
+    popd
+
+
+# -----------------------------------------------------
+# Exit back to our host VM.
+#[user@builder]
+
+    exit
+
+
