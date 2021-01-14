@@ -1,0 +1,471 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Update our Zeppelin fork
+
+    Result:
+
+        Complete
+
+        TODO Update the version in the pom.xml files.
+        TODO Add the changes to Paragraph.java
+        TODO Do we need to keep changes to the Dockerfiles ?
+
+
+# -----------------------------------------------------
+# Update the WFAU fork of Zeppelin.
+#[user@desktop]
+
+    source "${HOME}/aglais.env"
+    pushd  "${ZEPPELIN_HOME:?}"
+
+        git clone git@github.com:WFAU/aglais-zeppelin.git github-wfau
+
+    >   Cloning into 'github-wfau'...
+    >   remote: Enumerating objects: 3, done.
+    >   remote: Counting objects: 100% (3/3), done.
+    >   remote: Compressing objects: 100% (3/3), done.
+    >   remote: Total 97018 (delta 0), reused 0 (delta 0), pack-reused 97015
+    >   Receiving objects: 100% (97018/97018), 86.09 MiB | 1.70 MiB/s, done.
+    >   Resolving deltas: 100% (39688/39688), done.
+
+
+        pushd github-wfau
+
+            git remote -v
+
+    >   origin	git@github.com:WFAU/aglais-zeppelin.git (fetch)
+    >   origin	git@github.com:WFAU/aglais-zeppelin.git (push)
+
+            git remote add upstream git@github.com:apache/zeppelin.git
+
+            git remote -v
+
+    >   origin	git@github.com:WFAU/aglais-zeppelin.git (fetch)
+    >   origin	git@github.com:WFAU/aglais-zeppelin.git (push)
+    >   upstream	git@github.com:apache/zeppelin.git (fetch)
+    >   upstream	git@github.com:apache/zeppelin.git (push)
+
+
+            git fetch upstream
+
+    >   remote: Enumerating objects: 2068, done.
+    >   remote: Counting objects: 100% (2068/2068), done.
+    >   remote: Compressing objects: 100% (2/2), done.
+    >   remote: Total 6516 (delta 2067), reused 2066 (delta 2066), pack-reused 4448
+    >   Receiving objects: 100% (6516/6516), 1.20 MiB | 584.00 KiB/s, done.
+    >   Resolving deltas: 100% (2772/2772), completed with 737 local objects.
+    >   From github.com:apache/zeppelin
+    >    * [new branch]          0.8_hotfix                                         -> upstream/0.8_hotfix
+    >    * [new branch]          ZEPPELIN-5169                                      -> upstream/ZEPPELIN-5169
+    >    ....
+    >    ....
+    >    * [new branch]          web_angular                                        -> upstream/web_angular
+    >    * [new branch]          web_vue                                            -> upstream/web_vue
+
+
+            git merge upstream/master
+
+    >   Updating e131b691c..7ff0db9a0
+    >   Fast-forward
+    >    .github/PULL_REQUEST_TEMPLATE                                                                                                                         |    1 -
+    >    .github/workflows/core.yml                                                                                                                            |  373 ++++++
+    >    .github/workflows/frontend.yml                                                                                                                        |  103 ++
+    >    .github/workflows/rat.yml                                                                                                                             |   29 +
+    >    .travis.yml                                                                                                                                           |  231 ----
+    >    Dockerfile                                                                                                                                            |   32 +
+    >    README.md                                                                                                                                             |    4 +-
+    >    alluxio/pom.xml                                                                                                                                       |    4 +-
+    >    angular/pom.xml                                                                                                                                       |    4 +-
+    >    ....
+    >    ....
+    >    zeppelin-plugins/launcher/k8s-standard/pom.xml                                                                                                        |    4 +-
+    >    zeppelin-plugins/launcher/k8s-standard/src/main/java/org/apache/zeppelin/interpreter/launcher/K8sRemoteInterpreterProcess.java                        |   73 +-
+    >    zeppelin-plugins/launcher/k8s-standard/src/main/java/org/apache/zeppelin/interpreter/launcher/K8sStandardInterpreterLauncher.java                     |    8 +-
+    >    zeppelin-plugins/launcher/k8s-standard/src/test/java/org/apache/zeppelin/interpreter/launcher/K8sRemoteInterpreterProcessTest.java                    |   22 +-
+    >    zeppelin-plugins/launcher/k8s-standard/src/test/java/org/apache/zeppelin/interpreter/launcher/K8sStandardInterpreterLauncherTest.java                 |   10 +-
+    >    ....
+    >    ....
+    >    create mode 100644 zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/scheduler/CronJobListener.java
+    >    create mode 100644 zeppelin-zengine/src/main/java/org/apache/zeppelin/search/NoSearchService.java
+
+
+            git push
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   remote: This repository moved. Please use the new location:
+    >   remote:   git@github.com:wfau/aglais-zeppelin.git
+    >   remote: error: GH006: Protected branch update failed for refs/heads/master.
+    >   remote: error: At least 1 approving review is required by reviewers with write access.
+    >   To github.com:WFAU/aglais-zeppelin.git
+    >    ! [remote rejected]     master -> master (protected branch hook declined)
+    >   error: failed to push some refs to 'git@github.com:WFAU/aglais-zeppelin.git'
+
+            #
+            # Update the GitHub branch rules to allow forced push.
+            #
+
+            git push --force
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   remote: This repository moved. Please use the new location:
+    >   remote:   git@github.com:wfau/aglais-zeppelin.git
+    >   remote: error: GH006: Protected branch update failed for refs/heads/master.
+    >   remote: error: At least 1 approving review is required by reviewers with write access.
+    >   To github.com:WFAU/aglais-zeppelin.git
+    >    ! [remote rejected]     master -> master (protected branch hook declined)
+    >   error: failed to push some refs to 'git@github.com:WFAU/aglais-zeppelin.git'
+
+
+            #
+            # Remove the GitHub branch rule.
+            #
+
+            git push --force
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   remote: This repository moved. Please use the new location:
+    >   remote:   git@github.com:wfau/aglais-zeppelin.git
+    >   To github.com:WFAU/aglais-zeppelin.git
+    >      e131b691c..7ff0db9a0  master -> master
+
+            #
+            # Restore the GitHub branch rule.
+            #
+
+        popd
+    popd
+
+
+# -----------------------------------------------------
+# Update our personal fork of Zeppelin.
+#[user@desktop]
+
+    source "${HOME}/aglais.env"
+    pushd  "${ZEPPELIN_CODE:?}"
+
+        git checkout master
+
+    >   M	zeppelin-web/karma.conf.js
+    >   M	zeppelin-web/package-lock.json
+    >   M	zeppelin-web/src/index.html
+    >   Switched to branch 'master'
+    >   Your branch is up to date with 'origin/master'.
+
+
+        git status
+
+    >   On branch master
+    >   Your branch is up to date with 'origin/master'.
+    >
+    >   Changes not staged for commit:
+    >     (use "git add <file>..." to update what will be committed)
+    >     (use "git restore <file>..." to discard changes in working directory)
+    >   	modified:   zeppelin-web/karma.conf.js
+    >   	modified:   zeppelin-web/package-lock.json
+    >   	modified:   zeppelin-web/src/index.html
+    >
+    >   no changes added to commit (use "git add" and/or "git commit -a")
+
+        #
+        # Broken build process modifies files in the source code.
+        #
+
+        git restore \
+            zeppelin-web/karma.conf.js \
+            zeppelin-web/package-lock.json \
+            zeppelin-web/src/index.html
+
+
+        git status
+
+    >   On branch master
+    >   Your branch is up to date with 'origin/master'.
+    >
+    >   nothing to commit, working tree clean
+
+
+        git remote -v
+
+    >   origin	git@github.com:Zarquan/aglais-zeppelin.git (fetch)
+    >   origin	git@github.com:Zarquan/aglais-zeppelin.git (push)
+    >   wfau	git@github.com:wfau/aglais-zeppelin.git (fetch)
+    >   wfau	git@github.com:wfau/aglais-zeppelin.git (push)
+    >   zeppelin	https://github.com/apache/zeppelin.git (fetch)
+    >   zeppelin	https://github.com/apache/zeppelin.git (push)
+
+
+        git remote remove wfau
+        git remote remove zeppelin
+
+        git remote add upstream git@github.com:WFAU/aglais-zeppelin.git
+
+        git remote -v
+
+    >   origin	git@github.com:Zarquan/aglais-zeppelin.git (fetch)
+    >   origin	git@github.com:Zarquan/aglais-zeppelin.git (push)
+    >   upstream	git@github.com:WFAU/aglais-zeppelin.git (fetch)
+    >   upstream	git@github.com:WFAU/aglais-zeppelin.git (push)
+
+
+        git fetch upstream
+
+    >   remote: Enumerating objects: 1192, done.
+    >   remote: Counting objects: 100% (1192/1192), done.
+    >   remote: Total 3600 (delta 1192), reused 1192 (delta 1192), pack-reused 2408
+    >   Receiving objects: 100% (3600/3600), 705.83 KiB | 1.43 MiB/s, done.
+    >   Resolving deltas: 100% (1480/1480), completed with 566 local objects.
+    >   From github.com:WFAU/aglais-zeppelin
+    >    * [new branch]          0.8_hotfix                                         -> upstream/0.8_hotfix
+    >    * [new branch]          branch-0.5                                         -> upstream/branch-0.5
+    >    ....
+    >    ....
+    >    * [new branch]          web_angular                                        -> upstream/web_angular
+    >    * [new branch]          web_vue                                            -> upstream/web_vue
+
+
+        git merge upstream/master
+
+    >   Updating ac12b2825..7ff0db9a0
+    >   Fast-forward
+    >    .github/PULL_REQUEST_TEMPLATE                                                                                                                         |   1 -
+    >    .github/workflows/core.yml                                                                                                                            | 373 +++++++++++++++++++++++++++++++++
+    >    .github/workflows/frontend.yml                                                                                                                        | 103 ++++++++++
+    >    .github/workflows/rat.yml                                                                                                                             |  29 +++
+    >    .travis.yml                                                                                                                                           | 483 -------------------------------------------
+    >    README.md                                                                                                                                             |   4 +-
+    >    alluxio/pom.xml                                                                                                                                       |   4 +-
+    >    angular/pom.xml                                                                                                                                       |   4 +-
+    >    ....
+    >    ....
+    >    delete mode 100644 zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/socket/Message.java
+    >    create mode 100644 zeppelin-zengine/src/main/java/org/apache/zeppelin/search/NoSearchService.java
+
+
+        git push
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   To github.com:Zarquan/aglais-zeppelin.git
+    >      ac12b2825..7ff0db9a0  master -> master
+
+    popd
+
+
+# -----------------------------------------------------
+# Branch our personal fork of Zeppelin.
+#[user@desktop]
+
+    newbranch=$(date '+%Y%m%d')-zrq-working
+
+    source "${HOME}/aglais.env"
+    pushd  "${ZEPPELIN_CODE}"
+
+        git checkout master
+
+    >   Already on 'master'
+    >   Your branch is up to date with 'origin/master'.
+
+        git branch
+
+    >     20200911-zrq-devel
+    >   * master
+
+        git checkout -b "${newbranch:?}"
+
+    >   Switched to a new branch '20210114-zrq-working'
+
+
+        git push --set-upstream origin "${newbranch:?}"
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   remote:
+    >   remote: Create a pull request for '20210114-zrq-working' on GitHub by visiting:
+    >   remote:      https://github.com/Zarquan/aglais-zeppelin/pull/new/20210114-zrq-working
+    >   remote:
+    >   To github.com:Zarquan/aglais-zeppelin.git
+    >    * [new branch]          20210114-zrq-working -> 20210114-zrq-working
+    >   Branch '20210114-zrq-working' set up to track remote branch '20210114-zrq-working' from 'origin'.
+
+
+    popd
+
+
+# -----------------------------------------------------
+# List the changes on our personal fork of Zeppelin.
+#[user@desktop]
+
+    source "${HOME}/aglais.env"
+    pushd  "${ZEPPELIN_CODE}"
+
+        git branch
+
+    >     20200911-zrq-devel
+    >   * 20210114-zrq-working
+    >     master
+
+
+        git diff master...20200911-zrq-devel
+
+    >   diff --git a/alluxio/pom.xml b/alluxio/pom.xml
+    >   index 0f82a4246..b8ff9a725 100644
+    >   --- a/alluxio/pom.xml
+    >   +++ b/alluxio/pom.xml
+    >   @@ -23,14 +23,14 @@
+    >        <parent>
+    >            <artifactId>zeppelin-interpreter-parent</artifactId>
+    >            <groupId>org.apache.zeppelin</groupId>
+    >   -        <version>0.9.0-SNAPSHOT</version>
+    >   +        <version project="zeppelin">0.9.0-aglais-0.0.1</version>
+    >            <relativePath>../zeppelin-interpreter-parent/pom.xml</relativePath>
+    >        </parent>
+    >
+    >        <groupId>org.apache.zeppelin</groupId>
+    >        <artifactId>zeppelin-alluxio</artifactId>
+    >        <packaging>jar</packaging>
+    >   -    <version>0.9.0-SNAPSHOT</version>
+    >   +    <version project="zeppelin">0.9.0-aglais-0.0.1</version>
+    >        <name>Zeppelin: Alluxio interpreter</name>
+    >   ....
+
+    >   ....
+    >   diff --git a/k8s/zeppelin-server.yaml b/k8s/zeppelin-server.yaml
+    >   index 98fcf9d3b..d31dc7329 100644
+    >   --- a/k8s/zeppelin-server.yaml
+    >   +++ b/k8s/zeppelin-server.yaml
+    >   @@ -29,7 +29,7 @@ data:
+    >      # If you have your ingress controller configured to connect to `zeppelin-server` service and have a domain name for it (with wildcard subdomain point the same address), you can replace serviceDomain field with your own domain.
+    >      SERVICE_DOMAIN: local.zeppelin-project.org:8080
+    >      ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE: spark:2.4.5
+    >   -  ZEPPELIN_K8S_CONTAINER_IMAGE: apache/zeppelin-interpreter:0.9.0-SNAPSHOT
+    >   +  ZEPPELIN_K8S_CONTAINER_IMAGE: apache/zeppelin-interpreter:0.9.0-aglais-0.0.1
+    >      ZEPPELIN_HOME: /opt/zeppelin
+    >      ZEPPELIN_SERVER_RPC_PORTRANGE: 12320:12320
+    >      # default value of 'master' property for spark interpreter.
+    >   @@ -115,7 +115,7 @@ spec:
+    >                path: nginx.conf
+    >          containers:
+    >          - name: zeppelin-server
+    >   -        image: apache/zeppelin-server:0.9.0-SNAPSHOT
+    >   +        image: apache/zeppelin-server:0.9.0-aglais-0.0.1
+    >            command: ["sh", "-c", "$(ZEPPELIN_HOME)/bin/zeppelin.sh"]
+    >            lifecycle:
+    >              preStop:
+    >   ....
+
+    >   ....
+    >   diff --git a/scripts/docker/zeppelin-interpreter/Dockerfile b/scripts/docker/zeppelin-interpreter/Dockerfile
+    >   index 090d1cc67..8908805c0 100644
+    >   --- a/scripts/docker/zeppelin-interpreter/Dockerfile
+    >   +++ b/scripts/docker/zeppelin-interpreter/Dockerfile
+    >   @@ -19,7 +19,7 @@ FROM ubuntu:20.04
+    >
+    >    LABEL maintainer="Apache Software Foundation <dev@zeppelin.apache.org>"
+    >
+    >   -ARG version="0.9.0-SNAPSHOT"
+    >   +ARG version="0.9.0-aglais-0.0.1"
+    >
+    >    ENV VERSION="${version}" \
+    >        Z_HOME="/opt/zeppelin"
+    >   ....
+
+    >   ....
+    >   diff --git a/scripts/docker/zeppelin-server/Dockerfile b/scripts/docker/zeppelin-server/Dockerfile
+    >   index ec470e421..dfe73b47d 100644
+    >   --- a/scripts/docker/zeppelin-server/Dockerfile
+    >   +++ b/scripts/docker/zeppelin-server/Dockerfile
+    >   @@ -35,7 +35,7 @@ RUN set -ex && \
+    >        apt-get autoclean && \
+    >        apt-get clean
+    >
+    >   -ARG version="0.9.0-SNAPSHOT"
+    >   +ARG version="0.9.0-aglais-0.0.1"
+    >
+    >    ENV LANG=en_US.UTF-8 \
+    >        LC_ALL=en_US.UTF-8 \
+    >   ....
+
+    >   ....
+    >   diff --git a/zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/Paragraph.java b/zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/Paragraph.java
+    >   index 689ecfdb3..bb0940dcd 100644
+    >   --- a/zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/Paragraph.java
+    >   +++ b/zeppelin-zengine/src/main/java/org/apache/zeppelin/notebook/Paragraph.java
+    >   @@ -47,6 +47,7 @@ import org.apache.zeppelin.interpreter.InterpreterException;
+    >    import org.apache.zeppelin.interpreter.InterpreterNotFoundException;
+    >    import org.apache.zeppelin.interpreter.InterpreterResult;
+    >    import org.apache.zeppelin.interpreter.InterpreterResult.Code;
+    >   +import org.apache.zeppelin.interpreter.InterpreterResult.Type;
+    >    import org.apache.zeppelin.interpreter.InterpreterResultMessage;
+    >    import org.apache.zeppelin.interpreter.InterpreterSetting;
+    >    import org.apache.zeppelin.interpreter.ManagedInterpreterGroup;
+    >   @@ -424,6 +425,36 @@ public class Paragraph extends JobWithProgressPoller<InterpreterResult> implemen
+    >              return new InterpreterResult(Code.ERROR, msg);
+    >            }
+    >          }
+    >   +//ZRQ
+    >   +      LOGGER.info(
+    >   +        "ZRQ test [paragraph: {}, interpreter: {}, note_id: {}, user: {}, subject: {}]",
+    >   +        this.getId(),
+    >   +        this.interpreter.getClassName(),
+    >   +        this.note.getId(),
+    >   +        this.user,
+    >   +        this.subject.getUser()
+    >   +        );
+    >   +    #
+    # TODO Update the jar version in the pom.xm files.
+    # TODO Add the changes to Paragraph.java
+    # TODO Do we need to change the Dockerfiles ?
+    #
+
+    >   +      if ("user2".equals(this.user)) {
+    >   +        String message = String.format(
+    >   +            "User '%s' does not have the resources to run '%s'",
+    >   +            this.user,
+    >   +            this.interpreter.getClassName()
+    >   +            );
+    >   +        LOGGER.error(message);
+    >   +        String html = String.format(
+    >   +"<div class=\"alert alert-danger\" role=\"alert\">" +
+    >   +"You don't have enough resources to run this step." +
+    >   +"<br/>" +
+    >   +"Please goto the <a href=\"'\" class=\"alert-link\">booking page</a> to reserve the resources you need." +
+    >   +"</div>"
+    >   +            );
+    >   +        return new InterpreterResult(
+    >   +            Code.INCOMPLETE,
+    >   +            Type.ANGULAR,
+    >   +            html
+    >   +            );
+    >   +      }
+    >
+    >          for (Paragraph p : userParagraphMap.values()) {
+    >            p.setText(getText());
+
+
+

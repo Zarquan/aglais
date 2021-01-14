@@ -1,0 +1,257 @@
+#
+# <meta:header>
+#   <meta:licence>
+#     Copyright (c) 2021, ROE (http://www.roe.ac.uk/)
+#
+#     This information is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This information is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   </meta:licence>
+# </meta:header>
+#
+#zrq-notes-time
+#zrq-notes-indent
+#zrq-notes-crypto
+#zrq-notes-ansible
+#zrq-notes-osformat
+#zrq-notes-zeppelin
+#
+
+    Target:
+
+        Update our Spark fork
+
+    Result:
+
+        Complete
+
+        TODO Do we need to update the version in our pom.xml files?
+
+
+# -----------------------------------------------------
+# Update the WFAU fork of Spark.
+#[user@desktop]
+
+    source "${HOME}/aglais.env"
+    pushd  "${SPARK_HOME:?}"
+
+        git clone git@github.com:WFAU/aglais-spark.git github-wfau
+
+    >   Cloning into 'github-wfau'...
+    >   remote: Enumerating objects: 48, done.
+    >   remote: Counting objects: 100% (48/48), done.
+    >   remote: Compressing objects: 100% (34/34), done.
+    >   remote: Total 768836 (delta 25), reused 14 (delta 14), pack-reused 768788
+    >   Receiving objects: 100% (768836/768836), 342.51 MiB | 1.55 MiB/s, done.
+    >   Resolving deltas: 100% (322216/322216), done.
+    >   Updating files: 100% (17158/17158), done.
+
+
+        pushd github-wfau
+
+            git remote -v
+
+    >   origin	git@github.com:WFAU/aglais-spark.git (fetch)
+    >   origin	git@github.com:WFAU/aglais-spark.git (push)
+
+            git remote add upstream git@github.com:apache/spark.git
+
+            git remote -v
+
+    >   origin	git@github.com:WFAU/aglais-spark.git (fetch)
+    >   origin	git@github.com:WFAU/aglais-spark.git (push)
+    >   upstream	git@github.com:apache/spark.git (fetch)
+    >   upstream	git@github.com:apache/spark.git (push)
+
+
+            git fetch upstream
+
+    >   remote: Enumerating objects: 2342, done.
+    >   remote: Counting objects: 100% (2342/2342), done.
+    >   remote: Compressing objects: 100% (23/23), done.
+    >   remote: Total 5531 (delta 2317), reused 2326 (delta 2316), pack-reused 3189
+    >   Receiving objects: 100% (5531/5531), 1.36 MiB | 1.70 MiB/s, done.
+    >   Resolving deltas: 100% (2867/2867), completed with 907 local objects.
+    >   From github.com:apache/spark
+    >    * [new branch]            branch-0.5      -> upstream/branch-0.5
+    >    * [new branch]            branch-0.6      -> upstream/branch-0.6
+    >   ....
+    >   ....
+    >    * [new branch]            master          -> upstream/master
+    >    * [new tag]               v3.1.0-rc1      -> v3.1.0-rc1
+
+
+            git merge upstream/master
+    >   Updating 1ef7ddd38a..1288ad814e
+    >   Fast-forward
+    >    .github/workflows/build_and_test.yml                   |   32 +-
+    >    .github/workflows/cancel_duplicate_workflow_runs.yml   |   19 +
+    >    R/pkg/DESCRIPTION                                      |    2 +-
+    >    R/pkg/R/DataFrame.R                                    |    2 +-
+    >   ....
+    >   ....
+    >    create mode 100644 sql/core/src/test/scala/org/apache/spark/sql/execution/command/v2/ShowNamespacesSuite.scala
+    >    create mode 100644 sql/hive/src/test/scala/org/apache/spark/sql/hive/execution/command/ShowNamespacesSuite.scala
+
+
+            git push
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   remote: This repository moved. Please use the new location:
+    >   remote:   git@github.com:wfau/aglais-spark.git
+    >   remote: error: GH006: Protected branch update failed for refs/heads/master.
+    >   remote: error: At least 1 approving review is required by reviewers with write access.
+    >   To github.com:WFAU/aglais-spark.git
+    >    ! [remote rejected]       master -> master (protected branch hook declined)
+    >   error: failed to push some refs to 'git@github.com:WFAU/aglais-spark.git'
+
+            #
+            # Update the GitHub branch rules to allow forced push.
+            #
+
+            git push --force
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   remote: This repository moved. Please use the new location:
+    >   remote:   git@github.com:wfau/aglais-spark.git
+    >   remote: error: GH006: Protected branch update failed for refs/heads/master.
+    >   remote: error: At least 1 approving review is required by reviewers with write access.
+    >   To github.com:WFAU/aglais-spark.git
+    >    ! [remote rejected]       master -> master (protected branch hook declined)
+    >   error: failed to push some refs to 'git@github.com:WFAU/aglais-spark.git'
+
+
+            #
+            # Remove the GitHub branch rule.
+            #
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   remote: This repository moved. Please use the new location:
+    >   remote:   git@github.com:wfau/aglais-spark.git
+    >   To github.com:WFAU/aglais-spark.git
+    >      1ef7ddd38a..1288ad814e  master -> master
+
+            #
+            # Restore the GitHub branch rule.
+            #
+
+        popd
+    popd
+
+
+# -----------------------------------------------------
+# Update our personal fork of Spark.
+#[user@desktop]
+
+    source "${HOME}/aglais.env"
+    pushd  "${SPARK_CODE:?}"
+
+        git checkout master
+
+    >   Already on 'master'
+    >   Your branch is up to date with 'origin/master'.
+
+
+        git remote -v
+
+    >   origin	git@github.com:Zarquan/aglais-spark.git (fetch)
+    >   origin	git@github.com:Zarquan/aglais-spark.git (push)
+
+        git remote add upstream git@github.com:WFAU/aglais-spark.git
+
+        git remote -v
+
+    >   origin	git@github.com:Zarquan/aglais-spark.git (fetch)
+    >   origin	git@github.com:Zarquan/aglais-spark.git (push)
+    >   upstream	git@github.com:WFAU/aglais-spark.git (fetch)
+    >   upstream	git@github.com:WFAU/aglais-spark.git (push)
+
+
+        git fetch upstream
+
+    >   remote: Enumerating objects: 1586, done.
+    >   remote: Counting objects: 100% (1586/1586), done.
+    >   remote: Compressing objects: 100% (17/17), done.
+    >   remote: Total 3532 (delta 1569), reused 1572 (delta 1569), pack-reused 1946
+    >   Receiving objects: 100% (3532/3532), 1.05 MiB | 410.00 KiB/s, done.
+    >   Resolving deltas: 100% (1914/1914), completed with 621 local objects.
+    >   From github.com:WFAU/aglais-spark
+    >    * [new branch]            branch-0.5      -> upstream/branch-0.5
+    >    * [new branch]            branch-0.6      -> upstream/branch-0.6
+    >   ....
+    >   ....
+    >    * [new branch]            branch-3.1      -> upstream/branch-3.1
+    >    * [new branch]            master          -> upstream/master
+
+
+        git merge upstream/master
+
+    >   Updating 1ef7ddd38a..1288ad814e
+    >   Fast-forward
+    >    .github/workflows/build_and_test.yml                   |   32 +-
+    >    .github/workflows/cancel_duplicate_workflow_runs.yml   |   19 +
+    >    R/pkg/DESCRIPTION                                      |    2 +-
+    >    R/pkg/R/DataFrame.R                                    |    2 +-
+    >   ....
+    >   ....
+    >    create mode 100644 sql/core/src/test/scala/org/apache/spark/sql/execution/command/v2/ShowNamespacesSuite.scala
+    >    create mode 100644 sql/hive/src/test/scala/org/apache/spark/sql/hive/execution/command/ShowNamespacesSuite.scala
+
+
+        git push
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   To github.com:Zarquan/aglais-spark.git
+    >      1ef7ddd38a..1288ad814e  master -> master
+
+    popd
+
+
+# -----------------------------------------------------
+# Branch our personal fork of Spark.
+#[user@desktop]
+
+    newbranch=$(date '+%Y%m%d')-zrq-working
+
+    source "${HOME}/aglais.env"
+    pushd  "${SPARK_CODE}"
+
+        git checkout master
+
+    >   Switched to branch 'master'
+    >   Your branch is up to date with 'origin/master'.
+
+
+        git checkout -b "${newbranch:?}"
+
+    >   Switched to a new branch '20210114-zrq-working'
+
+
+        git push --set-upstream origin "${newbranch:?}"
+
+    >   Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+    >   remote:
+    >   remote: Create a pull request for '20210114-zrq-working' on GitHub by visiting:
+    >   remote:      https://github.com/Zarquan/aglais-spark/pull/new/20210114-zrq-working
+    >   remote:
+    >   To github.com:Zarquan/aglais-spark.git
+    >    * [new branch]            20210114-zrq-working -> 20210114-zrq-working
+    >   Branch '20210114-zrq-working' set up to track remote branch '20210114-zrq-working' from 'origin'.
+
+    popd
+
+
+
+
+
+
+

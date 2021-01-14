@@ -36,7 +36,7 @@
 
 
 # -----------------------------------------------------
-# Check the local working branch.
+# Check our local working branches.
 #[user@desktop]
 
     source "${HOME}/aglais.env"
@@ -44,133 +44,36 @@
 
         git status
 
---START--
-On branch 20210113-zrq-working
-Your branch is up to date with 'origin/20210113-zrq-working'.
-....
-....
---END--
-
-        git remote -v
-
     popd
 
+    >   On branch 20210113-zrq-working
+    >   Your branch is up to date with 'origin/20210113-zrq-working'.
 
-
-
-# -----------------------------------------------------
-# Update our Spark fork.
-#[user@desktop]
 
     source "${HOME}/aglais.env"
     pushd  "${SPARK_CODE:?}"
 
         git checkout master
 
---START--
-....
-....
---END--
-
-
-        git remote -v
-
---START--
-....
-....
---END--
-
-
-        git fetch upstream
-
---START--
-....
-....
---END--
-
-
-        git merge upstream/master
-
---START--
-....
-....
---END--
-
-
-        git push
-
---START--
-....
-....
---END--
+        git status
 
     popd
 
+    >   ....
+    >   ....
 
-# -----------------------------------------------------
-# Branch our Spark fork.
-#[user@desktop]
-
-    newbranch=$(date '+%Y%m%d')-zrq-working
 
     source "${HOME}/aglais.env"
-    pushd  "${AGLAIS_CODE}"
+    pushd  "${ZEPPELIN_CODE:?}"
 
         git checkout master
 
---START--
-....
-....
---END--
-
-
-        git checkout -b "${newbranch:?}"
-
---START--
-....
-....
---END--
-
-
-        git push --set-upstream origin "${newbranch:?}"
-
---START--
-....
-....
---END--
+        git status
 
     popd
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    >   ....
+    >   ....
 
 
 
@@ -185,13 +88,11 @@ Your branch is up to date with 'origin/20210113-zrq-working'.
 
         createvm
 
---START--
-INFO : Node name [Wumar]
-INFO : Base name [fedora-31-docker-base-20200722.qcow]
-INFO : Base path [/var/lib/libvirt/images/base/fedora-31-docker-base-20200722.qcow]
-INFO : Disc name [Wumar.qcow]
-INFO : Disc size [32GiB]
---END--
+    >   INFO : Node name [Wumar]
+    >   INFO : Base name [fedora-31-docker-base-20200722.qcow]
+    >   INFO : Base path [/var/lib/libvirt/images/base/fedora-31-docker-base-20200722.qcow]
+    >   INFO : Disc name [Wumar.qcow]
+    >   INFO : Disc size [32GiB]
 
 
 # -----------------------------------------------------
@@ -267,44 +168,38 @@ EOF
     source "${HOME}/aglais.env"
     gitclone "${AGLAIS_CODE:?}" "${AGLAIS_REPO:?}"
 
---START--
-Cloning into 'github-zrq'...
-remote: Enumerating objects: 897, done.
-remote: Counting objects: 100% (897/897), done.
-remote: Compressing objects: 100% (557/557), done.
-remote: Total 5803 (delta 404), reused 635 (delta 305), pack-reused 4906
-Receiving objects: 100% (5803/5803), 2.53 MiB | 2.82 MiB/s, done.
-Resolving deltas: 100% (3033/3033), done.
---END--
+    >   Cloning into 'github-zrq'...
+    >   remote: Enumerating objects: 897, done.
+    >   remote: Counting objects: 100% (897/897), done.
+    >   remote: Compressing objects: 100% (557/557), done.
+    >   remote: Total 5803 (delta 404), reused 635 (delta 305), pack-reused 4906
+    >   Receiving objects: 100% (5803/5803), 2.53 MiB | 2.82 MiB/s, done.
+    >   Resolving deltas: 100% (3033/3033), done.
 
 
     source "${HOME}/aglais.env"
     gitclone "${SPARK_CODE:?}" "${SPARK_REPO:?}"
 
---START--
-Cloning into 'github-zrq'...
-remote: Enumerating objects: 48, done.
-remote: Counting objects: 100% (48/48), done.
-remote: Compressing objects: 100% (34/34), done.
-remote: Total 768836 (delta 25), reused 14 (delta 14), pack-reused 768788
-Receiving objects: 100% (768836/768836), 342.39 MiB | 7.54 MiB/s, done.
-Resolving deltas: 100% (322059/322059), done.
-Updating files: 100% (17158/17158), done.
---END--
+    >   Cloning into 'github-zrq'...
+    >   remote: Enumerating objects: 48, done.
+    >   remote: Counting objects: 100% (48/48), done.
+    >   remote: Compressing objects: 100% (34/34), done.
+    >   remote: Total 768836 (delta 25), reused 14 (delta 14), pack-reused 768788
+    >   Receiving objects: 100% (768836/768836), 342.39 MiB | 7.54 MiB/s, done.
+    >   Resolving deltas: 100% (322059/322059), done.
+    >   Updating files: 100% (17158/17158), done.
 
 
     source "${HOME}/aglais.env"
     gitclone "${ZEPPELIN_CODE:?}" "${ZEPPELIN_REPO:?}"
 
---START--
-Cloning into 'github-zrq'...
-remote: Enumerating objects: 3, done.
-remote: Counting objects: 100% (3/3), done.
-remote: Compressing objects: 100% (3/3), done.
-remote: Total 98409 (delta 0), reused 0 (delta 0), pack-reused 98406
-Receiving objects: 100% (98409/98409), 86.34 MiB | 8.53 MiB/s, done.
-Resolving deltas: 100% (40362/40362), done.
---END--
+    >   Cloning into 'github-zrq'...
+    >   remote: Enumerating objects: 3, done.
+    >   remote: Counting objects: 100% (3/3), done.
+    >   remote: Compressing objects: 100% (3/3), done.
+    >   remote: Total 98409 (delta 0), reused 0 (delta 0), pack-reused 98406
+    >   Receiving objects: 100% (98409/98409), 86.34 MiB | 8.53 MiB/s, done.
+    >   Resolving deltas: 100% (40362/40362), done.
 
 
 # -----------------------------------------------------
@@ -318,10 +213,8 @@ Resolving deltas: 100% (40362/40362), done.
 
     popd
 
---START--
-Branch '20210113-zrq-working' set up to track remote branch '20210113-zrq-working' from 'origin'.
-Switched to a new branch '20210113-zrq-working'
---END--
+    >   Branch '20210113-zrq-working' set up to track remote branch '20210113-zrq-working' from 'origin'.
+    >   Switched to a new branch '20210113-zrq-working'
 
 
     source "${HOME}/aglais.env"
@@ -331,10 +224,8 @@ Switched to a new branch '20210113-zrq-working'
 
     popd
 
---START--
-....
-....
---END--
+    >   ....
+    >   ....
 
 
     source "${HOME}/aglais.env"
@@ -344,10 +235,8 @@ Switched to a new branch '20210113-zrq-working'
 
     popd
 
---START--
-....
-....
---END--
+    >   ....
+    >   ....
 
 
 # -----------------------------------------------------
