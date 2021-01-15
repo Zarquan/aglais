@@ -250,8 +250,164 @@
     popd
 
 
+# -----------------------------------------------------
+# Update the POM version of our local fork.
+#[user@desktop]
+
+    source "${HOME}/aglais.env"
+    pushd  "${SPARK_CODE:?}"
+
+        oldversion=3.2.0-SNAPSHOT
+        newversion=aglais-20210114
+
+        for pom in $(find . -name 'pom.xml')
+        do
+            sed -i "
+                s/<version>${oldversion:?}<\/version>/<version project='aglais-spark'>${newversion:?}<\/version>/
+                " "${pom:?}"
+        done
+
+        git add .
+        git status
+
+    >   On branch 20210114-zrq-working
+    >   Your branch is up to date with 'origin/20210114-zrq-working'.
+    >   
+    >   Changes to be committed:
+    >     (use "git restore --staged <file>..." to unstage)
+    >   	modified:   assembly/pom.xml
+    >   	modified:   common/kvstore/pom.xml
+    >   	modified:   common/network-common/pom.xml
+    >   	modified:   common/network-shuffle/pom.xml
+    >   	modified:   common/network-yarn/pom.xml
+    >   	modified:   common/sketch/pom.xml
+    >   	modified:   common/tags/pom.xml
+    >   	modified:   common/unsafe/pom.xml
+    >   	modified:   core/pom.xml
+    >   	modified:   examples/pom.xml
+    >   	modified:   external/avro/pom.xml
+    >   	modified:   external/docker-integration-tests/pom.xml
+    >   	modified:   external/kafka-0-10-assembly/pom.xml
+    >   	modified:   external/kafka-0-10-sql/pom.xml
+    >   	modified:   external/kafka-0-10-token-provider/pom.xml
+    >   	modified:   external/kafka-0-10/pom.xml
+    >   	modified:   external/kinesis-asl-assembly/pom.xml
+    >   	modified:   external/kinesis-asl/pom.xml
+    >   	modified:   external/spark-ganglia-lgpl/pom.xml
+    >   	modified:   graphx/pom.xml
+    >   	modified:   hadoop-cloud/pom.xml
+    >   	modified:   launcher/pom.xml
+    >   	modified:   mllib-local/pom.xml
+    >   	modified:   mllib/pom.xml
+    >   	modified:   pom.xml
+    >   	modified:   repl/pom.xml
+    >   	modified:   resource-managers/kubernetes/core/pom.xml
+    >   	modified:   resource-managers/kubernetes/integration-tests/pom.xml
+    >   	modified:   resource-managers/mesos/pom.xml
+    >   	modified:   resource-managers/yarn/pom.xml
+    >   	modified:   sql/catalyst/pom.xml
+    >   	modified:   sql/core/pom.xml
+    >   	modified:   sql/hive-thriftserver/pom.xml
+    >   	modified:   sql/hive/pom.xml
+    >   	modified:   streaming/pom.xml
+    >   	modified:   tools/pom.xml
+
+        git commit -m "Set POM version to [${newversion:?}]"
+
+    >   [20210114-zrq-working e473b9f561] Set POM version to [aglais-20210114]
+    >    36 files changed, 36 insertions(+), 36 deletions(-)
+
+        git push
+
+    >   Enumerating objects: 150, done.
+    >   Counting objects: 100% (150/150), done.
+    >   Delta compression using up to 4 threads
+    >   Compressing objects: 100% (76/76), done.
+    >   Writing objects: 100% (78/78), 10.97 KiB | 3.66 MiB/s, done.
+    >   Total 78 (delta 38), reused 0 (delta 0), pack-reused 0
+    >   remote: Resolving deltas: 100% (38/38), completed with 35 local objects.
+    >   To github.com:Zarquan/aglais-spark.git
+    >      1288ad814e..e473b9f561  20210114-zrq-working -> 20210114-zrq-working
+
+    popd
 
 
+    source "${HOME}/aglais.env"
+    pushd  "${SPARK_CODE:?}"
 
+        newversion=aglais-spark-20210114
+
+        for pom in $(find . -name 'pom.xml')
+        do
+            sed -i "
+                s/<version project='aglais-spark'>[^<]*<\/version>/<version project='aglais-spark'>${newversion:?}<\/version>/
+                " "${pom:?}"
+        done
+
+        git add .
+        git status
+
+    >   On branch 20210114-zrq-working
+    >   Your branch is up to date with 'origin/20210114-zrq-working'.
+    >   
+    >   Changes to be committed:
+    >     (use "git restore --staged <file>..." to unstage)
+    >   	modified:   assembly/pom.xml
+    >   	modified:   common/kvstore/pom.xml
+    >   	modified:   common/network-common/pom.xml
+    >   	modified:   common/network-shuffle/pom.xml
+    >   	modified:   common/network-yarn/pom.xml
+    >   	modified:   common/sketch/pom.xml
+    >   	modified:   common/tags/pom.xml
+    >   	modified:   common/unsafe/pom.xml
+    >   	modified:   core/pom.xml
+    >   	modified:   examples/pom.xml
+    >   	modified:   external/avro/pom.xml
+    >   	modified:   external/docker-integration-tests/pom.xml
+    >   	modified:   external/kafka-0-10-assembly/pom.xml
+    >   	modified:   external/kafka-0-10-sql/pom.xml
+    >   	modified:   external/kafka-0-10-token-provider/pom.xml
+    >   	modified:   external/kafka-0-10/pom.xml
+    >   	modified:   external/kinesis-asl-assembly/pom.xml
+    >   	modified:   external/kinesis-asl/pom.xml
+    >   	modified:   external/spark-ganglia-lgpl/pom.xml
+    >   	modified:   graphx/pom.xml
+    >   	modified:   hadoop-cloud/pom.xml
+    >   	modified:   launcher/pom.xml
+    >   	modified:   mllib-local/pom.xml
+    >   	modified:   mllib/pom.xml
+    >   	modified:   pom.xml
+    >   	modified:   repl/pom.xml
+    >   	modified:   resource-managers/kubernetes/core/pom.xml
+    >   	modified:   resource-managers/kubernetes/integration-tests/pom.xml
+    >   	modified:   resource-managers/mesos/pom.xml
+    >   	modified:   resource-managers/yarn/pom.xml
+    >   	modified:   sql/catalyst/pom.xml
+    >   	modified:   sql/core/pom.xml
+    >   	modified:   sql/hive-thriftserver/pom.xml
+    >   	modified:   sql/hive/pom.xml
+    >   	modified:   streaming/pom.xml
+    >   	modified:   tools/pom.xml
+
+
+        git commit -m "Set POM version to [${newversion:?}]"
+
+    >   [20210114-zrq-working e05b0683b3] Set POM version to [aglais-spark-20210114]
+    >    36 files changed, 36 insertions(+), 36 deletions(-)
+
+
+        git push
+
+    >   Enumerating objects: 150, done.
+    >   Counting objects: 100% (150/150), done.
+    >   Delta compression using up to 4 threads
+    >   Compressing objects: 100% (76/76), done.
+    >   Writing objects: 100% (78/78), 10.09 KiB | 2.52 MiB/s, done.
+    >   Total 78 (delta 38), reused 0 (delta 0), pack-reused 0
+    >   remote: Resolving deltas: 100% (38/38), completed with 35 local objects.
+    >   To github.com:Zarquan/aglais-spark.git
+    >      e473b9f561..e05b0683b3  20210114-zrq-working -> 20210114-zrq-working
+
+    popd
 
 
