@@ -34,6 +34,9 @@
 
         Work in progress ....
 
+        TODO - update version of Maven in our builder
+        TODO - update our Zeppelin to use our Spark
+
 
 # -----------------------------------------------------
 # Check our local working branches.
@@ -46,38 +49,36 @@
 
     popd
 
-    >   On branch 20210113-zrq-working
-    >   Your branch is up to date with 'origin/20210113-zrq-working'.
+--START--
+On branch 20210113-zrq-working
+Your branch is up to date with 'origin/20210113-zrq-working'.
+--END--
 
 
     source "${HOME}/aglais.env"
     pushd  "${SPARK_CODE:?}"
 
-        git checkout master
-
         git status
 
     popd
 
-    >   ....
-    >   ....
+--START--
+On branch 20210114-zrq-working
+Your branch is up to date with 'origin/20210114-zrq-working'.
+--END--
 
 
     source "${HOME}/aglais.env"
     pushd  "${ZEPPELIN_CODE:?}"
 
-        git checkout master
-
         git status
 
     popd
 
-    >   ....
-    >   ....
-
-
-
-
+--START--
+On branch 20210114-zrq-working
+Your branch is up to date with 'origin/20210114-zrq-working'.
+--END--
 
 
 # -----------------------------------------------------
@@ -115,19 +116,21 @@
 #[user@virtual]
 
     cat > "${HOME}/aglais.env" << 'EOF'
-AGLAIS_REPO='https://github.com/Zarquan/aglais.git'
+AGLAIS_REPO='git@github.com:Zarquan/aglais.git'
 AGLAIS_HOME="${HOME}/build/aglais"
 AGLAIS_CODE="${AGLAIS_HOME:?}/github-zrq"
 AGLAIS_CLOUD=gaia-prod
+AGLAIS_BRANCH=20210113-zrq-working
 
-SPARK_REPO='https://github.com/Zarquan/aglais-spark.git'
+SPARK_REPO='git@github.com:Zarquan/aglais-spark.git'
 SPARK_HOME="${HOME}/build/aglais-spark"
 SPARK_CODE="${SPARK_HOME:?}/github-zrq"
+SPARK_BRANCH=20210114-zrq-working
 
-ZEPPELIN_REPO='https://github.com/Zarquan/aglais-zeppelin.git'
+ZEPPELIN_REPO='git@github.com:Zarquan/aglais-zeppelin.git'
 ZEPPELIN_HOME="${HOME}/build/aglais-zeppelin"
 ZEPPELIN_CODE="${ZEPPELIN_HOME:?}/github-zrq"
-
+ZEPPELIN_BRANCH=20210114-zrq-working
 EOF
 
 
@@ -139,6 +142,7 @@ EOF
         {
         local codepath=${1:?}
         local coderepo=${2:?}
+        local branch=${3:-master}
 
         local coderoot=$(dirname  ${codepath})
         local codename=$(basename ${codepath})
@@ -149,6 +153,9 @@ EOF
             echo "Updating [${codepath:?}]"
             pushd "${codepath:?}"
                 git pull
+                echo "----"
+                echo "Branch [${branch:?}]"
+                git checkout "${branch:?}"
             popd
         else
             echo "Checking [${coderoot:?}]"
@@ -158,85 +165,88 @@ EOF
                 mkdir -p "${coderoot:?}"
             fi
 
-            echo "Checkout [${coderoot:?}][${codename:?}]"
+            echo "----"
+            echo "Cloning  [${coderoot:?}][${codename:?}]"
             pushd "${coderoot:?}"
                 git clone "${coderepo:?}" "${codename:?}"
+                pushd "${codename:?}"
+                    echo "----"
+                    echo "Branch [${branch:?}]"
+                    git checkout "${branch:?}"
+                popd
             popd
         fi
         }
 
     source "${HOME}/aglais.env"
-    gitclone "${AGLAIS_CODE:?}" "${AGLAIS_REPO:?}"
+    gitclone "${AGLAIS_CODE:?}" "${AGLAIS_REPO:?}" "${AGLAIS_BRANCH:?}"
 
-    >   Cloning into 'github-zrq'...
-    >   remote: Enumerating objects: 897, done.
-    >   remote: Counting objects: 100% (897/897), done.
-    >   remote: Compressing objects: 100% (557/557), done.
-    >   remote: Total 5803 (delta 404), reused 635 (delta 305), pack-reused 4906
-    >   Receiving objects: 100% (5803/5803), 2.53 MiB | 2.82 MiB/s, done.
-    >   Resolving deltas: 100% (3033/3033), done.
+--START--
+Cloning into 'github-zrq'...
+The authenticity of host 'github.com (140.82.121.3)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'github.com,140.82.121.3' (RSA) to the list of known hosts.
+remote: Enumerating objects: 916, done.
+remote: Counting objects: 100% (916/916), done.
+remote: Compressing objects: 100% (569/569), done.
+remote: Total 5822 (delta 413), reused 651 (delta 312), pack-reused 4906
+Receiving objects: 100% (5822/5822), 2.55 MiB | 2.06 MiB/s, done.
+Resolving deltas: 100% (3042/3042), done.
+--END--
 
-
-    source "${HOME}/aglais.env"
-    gitclone "${SPARK_CODE:?}" "${SPARK_REPO:?}"
-
-    >   Cloning into 'github-zrq'...
-    >   remote: Enumerating objects: 48, done.
-    >   remote: Counting objects: 100% (48/48), done.
-    >   remote: Compressing objects: 100% (34/34), done.
-    >   remote: Total 768836 (delta 25), reused 14 (delta 14), pack-reused 768788
-    >   Receiving objects: 100% (768836/768836), 342.39 MiB | 7.54 MiB/s, done.
-    >   Resolving deltas: 100% (322059/322059), done.
-    >   Updating files: 100% (17158/17158), done.
+--START--
+Branch '20210113-zrq-working' set up to track remote branch '20210113-zrq-working' from 'origin'.
+Switched to a new branch '20210113-zrq-working'
+--END--
 
 
     source "${HOME}/aglais.env"
-    gitclone "${ZEPPELIN_CODE:?}" "${ZEPPELIN_REPO:?}"
+    gitclone "${SPARK_CODE:?}" "${SPARK_REPO:?}" "${SPARK_BRANCH:?}"
 
-    >   Cloning into 'github-zrq'...
-    >   remote: Enumerating objects: 3, done.
-    >   remote: Counting objects: 100% (3/3), done.
-    >   remote: Compressing objects: 100% (3/3), done.
-    >   remote: Total 98409 (delta 0), reused 0 (delta 0), pack-reused 98406
-    >   Receiving objects: 100% (98409/98409), 86.34 MiB | 8.53 MiB/s, done.
-    >   Resolving deltas: 100% (40362/40362), done.
-
-
-# -----------------------------------------------------
-# Swap to our development branch.
-#[user@virtual]
-
-    source "${HOME}/aglais.env"
-    pushd  "${AGLAIS_CODE:?}"
-
-        git checkout 20210113-zrq-working
-
-    popd
-
-    >   Branch '20210113-zrq-working' set up to track remote branch '20210113-zrq-working' from 'origin'.
-    >   Switched to a new branch '20210113-zrq-working'
+--START--
+Checking [/home/Stevedore/build/aglais-spark/github-zrq]
+Checking [/home/Stevedore/build/aglais-spark]
+Creating [/home/Stevedore/build/aglais-spark]
+----
+Cloning  [/home/Stevedore/build/aglais-spark][github-zrq]
+Cloning into 'github-zrq'...
+remote: Enumerating objects: 48, done.
+remote: Counting objects: 100% (48/48), done.
+remote: Compressing objects: 100% (34/34), done.
+remote: Total 772524 (delta 25), reused 14 (delta 14), pack-reused 772476
+Receiving objects: 100% (772524/772524), 343.54 MiB | 7.94 MiB/s, done.
+Resolving deltas: 100% (324230/324230), done.
+Updating files: 100% (17236/17236), done.
+----
+Branch [20210114-zrq-working]
+Branch '20210114-zrq-working' set up to track remote branch '20210114-zrq-working' from 'origin'.
+Switched to a new branch '20210114-zrq-working'
+--END--
 
 
     source "${HOME}/aglais.env"
-    pushd  "${SPARK_CODE:?}"
+    gitclone "${ZEPPELIN_CODE:?}" "${ZEPPELIN_REPO:?}" "${ZEPPELIN_BRANCH:?}"
 
-        git checkout ....
-
-    popd
-
-    >   ....
-    >   ....
-
-
-    source "${HOME}/aglais.env"
-    pushd  "${ZEPPELIN_CODE:?}"
-
-        git checkout ....
-
-    popd
-
-    >   ....
-    >   ....
+--START--
+Checking [/home/Stevedore/build/aglais-zeppelin/github-zrq]
+Checking [/home/Stevedore/build/aglais-zeppelin]
+Creating [/home/Stevedore/build/aglais-zeppelin]
+----
+Cloning  [/home/Stevedore/build/aglais-zeppelin][github-zrq]
+Cloning into 'github-zrq'...
+Warning: Permanently added the RSA host key for IP address '140.82.121.4' to the list of known hosts.
+remote: Enumerating objects: 367, done.
+remote: Counting objects: 100% (367/367), done.
+remote: Compressing objects: 100% (247/247), done.
+remote: Total 102373 (delta 183), reused 276 (delta 112), pack-reused 102006
+Receiving objects: 100% (102373/102373), 87.12 MiB | 6.06 MiB/s, done.
+Resolving deltas: 100% (42021/42021), done.
+----
+Branch [20210114-zrq-working]
+Branch '20210114-zrq-working' set up to track remote branch '20210114-zrq-working' from 'origin'.
+Switched to a new branch '20210114-zrq-working'
+--END--
 
 
 # -----------------------------------------------------
@@ -260,6 +270,10 @@ EOF
     >   ....
     >   ....
 
+    #
+    # Very slow downloading the image from Docker Hub.
+    # We _really_ need to setup our own service.
+    #
 
 
 # -----------------------------------------------------
@@ -277,16 +291,12 @@ EOF
 #[user@builder]
 
     cat > "${HOME}/aglais.env" << 'EOF'
-AGLAIS_REPO='https://github.com/Zarquan/aglais.git'
 AGLAIS_HOME='/var/local/build/aglais'
 AGLAIS_CODE="${AGLAIS_HOME:?}/github-zrq"
-AGLAIS_CLOUD=gaia-prod
 
-SPARK_REPO='https://github.com/Zarquan/aglais-spark.git'
 SPARK_HOME='/var/local/build/aglais-spark'
 SPARK_CODE="${SPARK_HOME:?}/github-zrq"
 
-ZEPPELIN_REPO='https://github.com/Zarquan/aglais-zeppelin.git'
 ZEPPELIN_HOME='/var/local/build/aglais-zeppelin'
 ZEPPELIN_CODE="${ZEPPELIN_HOME:?}/github-zrq"
 EOF
@@ -297,29 +307,67 @@ EOF
 # https://github.com/Zarquan/aglais-spark/blob/master/README.md#building-spark
 #[user@builder]
 
-    # Build all the components and install them in the Maven cache.
     source "${HOME}/aglais.env"
     pushd  "${SPARK_CODE:?}"
 
         # Spark is built using [Apache Maven](https://maven.apache.org/).
         # To build Spark and its example programs, run:
 
-        mvn -D skipTests clean package
+        ./build/mvn -D skipTests clean package
 
     popd
+
+
+--START--
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  31:35 min
+[INFO] Finished at: 2021-01-15T06:30:52Z
+[INFO] ------------------------------------------------------------------------
+--END--
 
 
 # -----------------------------------------------------
 # Build our version of Zeppelin.
 #[user@builder]
 
-    # Build all the components and install them in the Maven cache.
     source "${HOME}/aglais.env"
     pushd  "${ZEPPELIN_CODE:?}"
 
         mvn clean install -D skipTests -P build-distr -P hadoop3
 
     popd
+
+--START--
+....
+....
+[INFO] --- download-maven-plugin:1.6.0:wget (download-pyspark-files) @ spark-interpreter ---
+[WARNING] No signatures were supplied, skipping file validation
+[INFO] Read Timeout is set to 60000 milliseconds (apprx 1 minutes)
+[INFO] Downloading: https://archive.apache.org/dist/spark/spark-2.4.5/spark-2.4.5.tgz
+[INFO] 16/15291K
+....
+....
+[INFO] 15291/15291K
+[INFO] downloaded 15291K
+[INFO] Expanding: /var/local/build/aglais-zeppelin/github-zrq/spark/interpreter/target/spark-2.4.5.tgz into /var/local/build/aglais-zeppelin/github-zrq/spark/interpreter/target
+[INFO]
+[INFO] --- download-maven-plugin:1.6.0:wget (download-sparkr-files) @ spark-interpreter ---
+[WARNING] No signatures were supplied, skipping file validation
+[INFO] Got from cache: /var/local/cache/maven/.cache/download-maven-plugin/spark-2.4.5-bin-without-hadoop.tgz_a825ba3e631420a0e63dffd3520e960f
+[INFO] Expanding: /var/local/build/aglais-zeppelin/github-zrq/spark/interpreter/target/spark-2.4.5-bin-without-hadoop.tgz into /var/local/build/aglais-zeppelin/github-zrq/spark/interpreter/target
+[INFO]
+....
+....
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 23:50 min
+[INFO] Finished at: 2021-01-15T07:07:17Z
+[INFO] Final Memory: 478M/900M
+[INFO] ------------------------------------------------------------------------
+--END--
 
 
 # -----------------------------------------------------
